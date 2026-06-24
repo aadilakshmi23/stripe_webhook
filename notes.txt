@@ -1,0 +1,15 @@
+first write these codes
+
+
+next go to https://dashboard.stripe.com/login
+login with any of the type
+recommended -> signin with google 
+
+
+then go to 
+https://dashboard.stripe.com/
+
+
+bottom left corner -> developers (click that ) -> overview 
+
+and then top right corner -> testing tools -> secret key -> copy and paste in your .env file 
