@@ -37,4 +37,4 @@ then create a product (top right corner + icon) with price -> it will generate a
 
 hit api/checkout
 
-enter credit card -> for success -> 42424242424242, and expiry date is -> after current month , and any cvv  dhivbwevbwivhojvboejvjojvhjojbvjobjwjvojwbjovjwvjojvjj
+enter credit card -> for success -> 42424242424242, and expiry date is -> after current month , and any cvv  git
