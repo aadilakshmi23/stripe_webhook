@@ -13,3 +13,28 @@ https://dashboard.stripe.com/
 bottom left corner -> developers (click that ) -> overview 
 
 and then top right corner -> testing tools -> secret key -> copy and paste in your .env file 
+
+
+install stripe CLI 
+
+npm i -g @stripe/cli   (install stripe cli globally in your machine)
+
+write command -> stripe login
+
+copy the link and paste in your browser and login and allow access to the stirpe cli with your browser
+
+then enter the below command in your terminal 
+
+stripe listen --forward-to localhost:3000/webhook
+
+then copy the webhook secret from your terminal to .env file 
+
+go to stripe dashboad(in chrome)
+go to product catalogue
+
+then create a product (top right corner + icon) with price -> it will generate a price Id , copyt the price id 
+
+
+hit api/checkout
+
+enter credit card -> for success -> 42424242424242, and expiry date is -> after current month , and any cvv  dhivbwevbwivhojvboejvjojvhjojbvjobjwjvojwbjovjwvjojvjj

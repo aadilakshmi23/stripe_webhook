@@ -5,7 +5,7 @@ const mongoose = require('mongoose');
 const Stripe = require('stripe');
 
 const User = require('./models/User');
-
+    
 const PORT = process.env.PORT || 5000;
 
 const app = express();
@@ -38,6 +38,8 @@ app.post('/webhook', express.raw({ type: 'application/json' }), async (req, res)
      }
 
      if (event.type === 'checkout.session.completed') {
+
+          const session = event.data.object;
           const userEmail = session.customer_details.email;
 
           try {
@@ -57,12 +59,7 @@ app.post('/webhook', express.raw({ type: 'application/json' }), async (req, res)
      res.json({ received: true })
 })
 
-
-
-
-
 app.use(express.json())
-
 
 app.post('/api/checkout', async (req, res) => {
      const { email, priceId } = req.body;
@@ -71,6 +68,8 @@ app.post('/api/checkout', async (req, res) => {
      if (!user) {
           return res.status(404).json({ message: 'user not found' })
      }
+     console.log(`${process.env.CLIENT_URL}/success?session_id={CHECKOUT_SESSION_ID}`)
+     console.log(`${process.env.CLIENT_URL}/cancel`)
 
      const session = await stripe.checkout.sessions.create({
           payment_method_types: ['card'],
