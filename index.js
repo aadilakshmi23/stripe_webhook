@@ -5,7 +5,7 @@ const mongoose = require('mongoose');
 const Stripe = require('stripe');
 
 const User = require('./models/User');
-    
+
 const PORT = process.env.PORT || 5000;
 
 const app = express();
@@ -82,10 +82,10 @@ app.post('/api/checkout', async (req, res) => {
                }
           ],
           success_url: `${process.env.CLIENT_URL}/success?session_id={CHECKOUT_SESSION_ID}`,
-          cancel_url: `${process.env.CLIENT_URL}/cancel`
+          cancel_url: `${process.env.CLIENT_URL}/failure`
      })
 
-     res.json({url: session.url})
+     res.json({ url: session.url })
 })
 
 app.post('/api/signup', async (req, res) => {
@@ -105,6 +105,91 @@ app.post('/api/signup', async (req, res) => {
      } catch (error) {
           res.status(500).message('internal server error')
      }
+})
+
+app.get('/success', (req, res) => {
+     const htmlData = `
+     <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Successful</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 100px;
+            background-color: #f4f4f9;
+        }
+        .container {
+            background: white;
+            padding: 40px;
+            border-radius: 8px;
+            display: inline-block;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #2ecc71;
+        }
+        p {
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Payment Successful!</h1>
+        <p>Thank you for your purchase. Your transaction was completed successfully.</p>
+    </div>
+</body>
+</html>
+
+     `
+     res.send(htmlData)
+})
+
+
+app.get('/failure', (req, res) => {
+     const htmlData = `
+     <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Successful</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 100px;
+            background-color: #f4f4f9;
+        }
+        .container {
+            background: white;
+            padding: 40px;
+            border-radius: 8px;
+            display: inline-block;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #2ecc71;
+        }
+        p {
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Payment Failed!</h1>
+        <p>Your Payment has been failed.</p>
+    </div>
+</body>
+</html>
+
+     `
+     res.send(htmlData)
 })
 
 app.listen(PORT, () => {

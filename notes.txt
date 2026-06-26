@@ -38,3 +38,16 @@ then create a product (top right corner + icon) with price -> it will generate a
 hit api/checkout
 
 enter credit card -> for success -> 42424242424242, and expiry date is -> after current month , and any cvv  git
+
+
+
+
+
+
+4000 0000 0000 0002 – Generates a generic card decline error.
+4000 0000 0000 0003 – Triggers an insufficient funds error.
+4000 0000 0000 0004 – Results in a lost card hard decline.
+4000 0000 0000 0005 – Results in a stolen card hard decline.
+4000 0000 0000 0069 – Triggers a fraudulent card block.
+4000 0000 0000 0276 – Simulates an expired card error.
+4000 0000 0000 0121 – Triggers an incorrect PIN error.
