@@ -149,6 +149,67 @@ app.get('/success', (req, res) => {
      res.send(htmlData)
 })
 
+  async function getAllPastReceipts(subscriptionId) {
+  const invoices = await stripe.invoices.list({
+    subscription: subscriptionId,
+    limit: 10, // Adjust based on how many past receipts you want
+  });
+
+  // Map through invoices to get a history of links
+  return invoices.data.map(invoice => ({
+    date: new Date(invoice.created * 1000).toLocaleDateString(),
+    amount: invoice.amount_paid / 100, // Convert cents to dollars/currency
+    viewUrl: invoice.hosted_invoice_url,
+    downloadUrl: invoice.invoice_pdf
+  }));
+}
+
+app.get('/api/invoices', async(req, res) => {
+     const email = req.query.email;
+
+     const user = await User.findOne({email});
+     if(!user){
+          return res.status(404).json({message: 'user not found'});
+     }
+     const invoices = await getAllPastReceipts(user.subscriptionId);
+     res.json({
+          success:true,
+          invoices
+     })
+})
+
+async function getSubscriptionReceiptLinks(subscriptionId) {
+  // 1. Retrieve subscription and expand the latest invoice object
+  const subscription = await stripe.subscriptions.retrieve(subscriptionId, {
+    expand: ['latest_invoice'],
+  });
+
+  const latestInvoice = subscription.latest_invoice;
+
+  // 2. Extract the view and download URLs
+  const viewReceiptUrl = latestInvoice.hosted_invoice_url;
+  const downloadPdfUrl = latestInvoice.invoice_pdf;
+
+  console.log(`👁️ View Web Receipt: ${viewReceiptUrl}`);
+  console.log(`📥 Download PDF Receipt: ${downloadPdfUrl}`);
+
+  return { viewReceiptUrl, downloadPdfUrl };
+}
+
+app.get('/api/invoices-test', async(req, res) => {
+     const email = req.query.email;
+
+     const user = await User.findOne({email});
+     if(!user){
+          return res.status(404).json({message: 'user not found'});
+     }
+     const invoice = await getSubscriptionReceiptLinks(user.subscriptionId);
+     res.json({
+          success:true,
+          invoice
+     })
+})
+
 
 app.get('/failure', (req, res) => {
      const htmlData = `
